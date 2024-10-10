@@ -1,19 +1,23 @@
 ```markdown
-# Mineração de Dados - Curso de Sistemas de Informação
+# 📊 Mineração de Dados - Curso de Sistemas de Informação
 
-Este repositório contém os materiais e projetos desenvolvidos na disciplina de Mineração de Dados do curso de Sistemas de Informação.
+Bem-vindo ao repositório da disciplina de **Mineração de Dados** do curso de **Sistemas de Informação**. Aqui, você encontrará materiais, projetos e exemplos que ajudarão a entender e aplicar técnicas de mineração de dados.
 
-## Descrição da Disciplina
+---
 
-A disciplina de Mineração de Dados tem como objetivo apresentar técnicas e ferramentas para extrair conhecimento útil a partir de grandes volumes de dados. Ao longo do curso, abordaremos temas como:
+## 📚 Descrição da Disciplina
 
-- Fundamentos de Mineração de Dados
-- Pré-processamento de Dados
-- Algoritmos de Aprendizado de Máquina
-- Análise de Dados Não Estruturados
-- Avaliação de Modelos
+A disciplina de Mineração de Dados visa introduzir técnicas e ferramentas que permitem extrair conhecimento valioso de grandes volumes de dados. Ao longo do curso, abordaremos:
 
-## Estrutura do Repositório
+- **Fundamentos de Mineração de Dados**
+- **Pré-processamento de Dados**
+- **Algoritmos de Aprendizado de Máquina**
+- **Análise de Dados Não Estruturados**
+- **Avaliação de Modelos**
+
+---
+
+## 📂 Estrutura do Repositório
 
 ```
 ├── Notas/
@@ -27,26 +31,45 @@ A disciplina de Mineração de Dados tem como objetivo apresentar técnicas e fe
 └── README.md
 ```
 
-## Como Contribuir
+---
 
-Contribuições são bem-vindas! Se você deseja adicionar algum material ou melhorar a documentação, siga estas etapas:
+## 🤝 Como Contribuir
 
-1. Faça um fork do repositório.
-2. Crie uma branch para sua feature (`git checkout -b minha-feature`).
-3. Faça suas alterações e commit (`git commit -m 'Adiciona nova feature'`).
-4. Faça push para a branch (`git push origin minha-feature`).
-5. Abra um Pull Request.
+Contribuições são muito bem-vindas! Para colaborar, siga estas etapas:
 
-## Licença
+1. **Fork** o repositório.
+2. Crie uma nova **branch** para sua feature:
+   ```bash
+   git checkout -b minha-feature
+   ```
+3. Faça suas alterações e **commit**:
+   ```bash
+   git commit -m 'Adiciona nova feature'
+   ```
+4. Faça **push** para a branch:
+   ```bash
+   git push origin minha-feature
+   ```
+5. Abra um **Pull Request**.
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+---
 
-## Contato
+## 📜 Licença
+
+Este projeto está licenciado sob a **Licença MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+## 📬 Contato
 
 Para dúvidas e sugestões, entre em contato:
 
-- Nome do Professor: [Nome]
-- Email: [email@exemplo.com]
+- **Professor:** [Nome]
+- **Email:** [email@exemplo.com]
+
+---
+
+Agradecemos pela sua contribuição e interesse na Mineração de Dados!
 ```
 
-Sinta-se à vontade para personalizar as seções conforme necessário!
+Sinta-se à vontade para ajustar qualquer parte que achar necessário!
