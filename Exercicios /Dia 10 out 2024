@@ -1,0 +1,44 @@
+install.packages("arules")
+library(arules)
+
+a <- c(1, 1, 0, 0, 1, 1, 0, 1)
+b <- c(0, 1, 0, 1, 1, 0, 0, 0)
+c <- c(0, 1, 1, 0, 1, 1, 1, 1)
+goal <- c(1, 0, 1, 0, 1, 1, 1, 1)
+
+intercesao = function(a, b) {
+  sum(a == b)
+}
+
+suporte = function(df, column) {
+  sum(df[[column]] == 1) / nrow(df)
+}
+
+confianca = function(df, rule_col, goal_col) {
+  intersec <- intercesao(df[[rule_col]], df[[goal_col]])
+  suporte_val <- suporte(df, rule_col)
+  if (suporte_val == 0) return(0) 
+  intersec / suporte_val
+}
+
+lift = function(df, rule_col, goal_col) {
+  intersec <- intercesao(df[[rule_col]], df[[goal_col]])
+  suporte_rule <- suporte(df, rule_col)
+  suporte_goal <- suporte(df, goal_col)
+  if (suporte_rule == 0 || suporte_goal == 0) return(0)  
+  intersec / (suporte_rule * suporte_goal)
+}
+
+
+df <- data.frame(a, b, c, goal)
+
+
+df[] <- lapply(df, as.factor)
+
+
+regra <- apriori(df, parameter = list(supp = 0.001, conf = 0.7))
+
+regra_goal <- subset(regra, rhs %in% "goal=1")
+
+summary(regra_goal)
+inspect(regra_goal)
