@@ -1,4 +1,4 @@
-```markdown
+
 # 📊 Mineração de Dados - Curso de Sistemas de Informação
 
 Bem-vindo ao repositório da disciplina de **Mineração de Dados** do curso de **Sistemas de Informação**. Aqui, você encontrará materiais, projetos e exemplos que ajudarão a entender e aplicar técnicas de mineração de dados.
