@@ -20,14 +20,14 @@ A disciplina de Mineração de Dados visa introduzir técnicas e ferramentas que
 ## 📂 Estrutura do Repositório
 
 ```
-├── Notas/
-│   └── Notas de aula e material de leitura
+├── Exercicios/
+│   └── Exercicios de aula e material de leitura
 ├── Projetos/
 │   ├── Projeto1/
 │   ├── Projeto2/
 │   └── ...
 ├── Exemplos/
-│   └── Exemplos de códigos e scripts
+│   └── Testes de códigos e scripts
 └── README.md
 ```
 
@@ -52,20 +52,10 @@ Contribuições são muito bem-vindas! Para colaborar, siga estas etapas:
    ```
 5. Abra um **Pull Request**.
 
----
-
-## 📜 Licença
-
-Este projeto está licenciado sob a **Licença MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
 
 ## 📬 Contato
 
 Para dúvidas e sugestões, entre em contato:
-
-- **Professor:** [Nome]
-- **Email:** [email@exemplo.com]
 
 ---
 
