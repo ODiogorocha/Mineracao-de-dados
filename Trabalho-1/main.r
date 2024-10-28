@@ -1,64 +1,61 @@
-# Instalação e carregamento dos pacotes necessários
 install.packages("arules")  
-install.packages("readr")
-install.packages("dplyr")
-install.packages("hunspell")
 
 library(arules)
-library(readr)
-library(dplyr)
-library(hunspell)
 
-# Carregando o arquivo CSV (substitua o caminho pelo correto)
-caminho_arquivo <- "Mineracao-de-dados/Trabalho-1/padaria.csv" 
-dados <- read_csv(caminho_arquivo)
-
-# Visualizando as primeiras linhas dos dados
-print(head(dados))
-
-# Função para verificar erros de português em uma coluna específica
-verificar_portugues <- function(texto) {
-  # Retorna TRUE se houver erro
-  !hunspell::hunspell_check(texto)
+# Função para carregar dados do CSV
+carregar_dados <- function(arquivo_csv) {
+  dados <- read.csv(arquivo_csv, header = FALSE, stringsAsFactors = FALSE)
+  
+  # Separar os produtos em cada compra
+  dados$V2 <- strsplit(dados$V2, ", ")
+  
+  # Converter os dados em um formato transacional
+  transacoes <- as(dados$V2, "transactions")
+  
+  return(transacoes)
 }
 
-# Filtrando os dados para excluir linhas com erros de português na coluna 'produtos'
-dados_filtrados <- dados %>%
-  filter(!verificar_portugues(produtos))
+# Função para encontrar regras de associação
+encontrar_regras_associacao <- function(transacoes, suporte_minimo = 0.05, confianca_minima = 0.5) {
+  regras <- apriori(transacoes, parameter = list(supp = suporte_minimo, conf = confianca_minima))
+  return(regras)
+}
 
-# Visualizando os dados filtrados
-print(head(dados_filtrados))
+# Função principal
+main <- function() {
+  arquivo_csv <- "/home/diogo/Documents/Aulas/M.dados/Mineracao-de-dados/Trabalho-1/padaria.csv"  
+  
+  # Carregar dados
+  transacoes <- carregar_dados(arquivo_csv)
+  
+  regras <- encontrar_regras_associacao(transacoes)
+  
+  # Exibir as 5 principais regras
+  cat("As 5 principais regras de associação:\n")
+  if (length(regras) > 0) {
+    regras_principais <- head(sort(regras, by = "confidence"), 5)
+    inspect(regras_principais)
+  } else {
+    cat("Nenhuma regra encontrada.\n")
+  }
+  
+  # Regras que implicam a compra de "Doce"
+  regras_doce <- subset(regras, rhs %pin% "Doce")
+  cat("\nRegras que implicam a compra de 'Doce':\n")
+  
+  if (length(regras_doce) > 0) {
+    inspect(regras_doce)
+  } else {
+    cat("Nenhuma regra que implica a compra de 'Doce' encontrada.\n")
+  }
+  
+  # Verificar se há menos de 5 regras e tentar incluir a regra do "Doce"
+  if (length(regras_principais) < 5 && length(regras_doce) > 0) {
+    cat("\nAdicionando regras relacionadas ao 'Doce' para completar as 5 principais regras:\n")
+    regras_principais <- unique(c(regras_principais, regras_doce))
+    regras_principais <- head(sort(regras_principais, by = "confidence"), 5)
+    inspect(regras_principais)
+  }
+}
 
-# Convertendo o dataframe filtrado para uma classe de transações
-# Supondo que o CSV tenha colunas: compra e produtos
-transacoes <- as(split(dados_filtrados$produtos, dados_filtrados$compra), "transactions")
-
-# Verificando as transações
-summary(transacoes)
-
-# Extração das regras de associação
-# Definindo os parâmetros de suporte e confiança
-regras <- apriori(transacoes, parameter = list(support = 0.01, confidence = 0.5))
-
-# Ordenando e selecionando as 5 principais regras com base no lift
-regras_principais <- head(sort(regras, by = "lift"), 5)
-cat("As 5 principais regras de associação são:\n")
-inspect(regras_principais)
-
-# Encontrando regras que impliquem na compra de "Doce"
-regras_doce <- subset(regras, rhs %in% "Doce")
-cat("\nRegras que implicam na compra de 'Doce':\n")
-inspect(regras_doce)
-
-# Encontrando o produto mais influente (1 para 1)
-regras_1_para_1 <- subset(regras, lhs %pin% c("Café", "Pão", "Presunto", "Queijo", "Pastel", "Doce", "Refri") & size(rhs) == 1)
-regras_1_para_1 <- head(sort(regras_1_para_1, by = "confidence"), 5)
-cat("\nRegras 1 para 1 (prodA => prodB):\n")
-inspect(regras_1_para_1)
-
-# Exportando as regras para arquivos CSV para o relatório
-write(regras_principais, file = "regras_principais.csv", sep = ",", quote = TRUE, row.names = FALSE)
-write(regras_doce, file = "regras_doce.csv", sep = ",", quote = TRUE, row.names = FALSE)
-
-# Finalizando
-cat("\nProcesso completo! As regras foram exportadas para 'regras_principais.csv' e 'regras_doce.csv'.")
+main()
