@@ -9,7 +9,7 @@ arquivo = pd.read_csv('Exercicios /GeyserUFSM.csv')
 espera = arquivo[['espera']]  
 erupcao = arquivo[['erupcao']]  
 
-espera_treino, espera_teste, erupcao_treino, erupcao_teste = train_test_split(espera, erupcao, test_size=0.5, random_state=42)
+espera_treino, espera_teste, erupcao_treino, erupcao_teste = train_test_split(espera, erupcao, test_size=0.5, random_state=45)
 
 modelo = LinearRegression()
 modelo.fit(espera_treino, erupcao_treino)
