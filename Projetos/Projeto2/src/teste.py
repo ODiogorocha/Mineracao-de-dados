@@ -6,6 +6,8 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
 
 def carregar_dados(caminho_arquivo: str) -> pd.DataFrame:
     try:
@@ -20,7 +22,7 @@ def carregar_dados(caminho_arquivo: str) -> pd.DataFrame:
         raise
 
 def explorar_dados(dados: pd.DataFrame) -> None:
-    print("Resumo estatistico:")
+    print("Resumo estatístico:")
     print(dados.describe())
     print("\nInformações dos dados:")
     print(dados.info())
@@ -42,10 +44,12 @@ def limpar_dados(dados: pd.DataFrame) -> pd.DataFrame:
 
     return dados
 
-def transformar_dados(dados: pd.DataFrame, colunas_alvo: list) -> pd.DataFrame:
-    # Normaliza as colunas
-    scaler = StandardScaler()
-    dados[colunas_alvo] = scaler.fit_transform(dados[colunas_alvo])
+def transformar_dados(dados: pd.DataFrame) -> pd.DataFrame:
+    # Seleciona apenas as colunas numéricas para a normalização
+    colunas_numericas = dados.select_dtypes(include=['number']).columns
+    if not colunas_numericas.empty:
+        scaler = StandardScaler()
+        dados[colunas_numericas] = scaler.fit_transform(dados[colunas_numericas])
 
     return dados
 
@@ -77,6 +81,20 @@ def treinar_modelo(dados: pd.DataFrame, alvo: str) -> None:
     plt.ylabel("Real")
     plt.show()
 
+def aplicar_apriori(dados: pd.DataFrame, suporte_minimo: float = 0.3, confiança_minima: float = 0.6):
+    # Transformar dados em codificação binária
+    dados_codificados = pd.get_dummies(dados, drop_first=True)
+
+    # Encontrar conjuntos frequentes
+    conjuntos_frequentes = apriori(dados_codificados, min_support=suporte_minimo, use_colnames=True)
+    print("\nConjuntos frequentes:")
+    print(conjuntos_frequentes)
+
+    # Gerar regras de associação
+    regras = association_rules(conjuntos_frequentes, metric='lift', min_threshold=confiança_minima)
+    print("\nRegras de associação:")
+    print(regras)
+
 if __name__ == "__main__":
     caminho_dados = "Projetos/Projeto2/arq/Ingressantes e Formandos/CT Ingressantes e formados por sexo.xls"
 
@@ -86,14 +104,23 @@ if __name__ == "__main__":
 
         dados_limpos = limpar_dados(dados)
 
-        colunas_para_transformar = [col for col in dados_limpos.columns if dados_limpos[col].dtype != 'object']
-        dados_transformados = transformar_dados(dados_limpos, colunas_para_transformar)
+        dados_transformados = transformar_dados(dados_limpos)
 
         dados_reduzidos = reduzir_dimensao(dados_transformados, n_componentes=2)
 
         coluna_alvo = "NOME_UNIDADE"  
         if coluna_alvo in dados_transformados.columns:
-            treinar_modelo(dados_transformados, coluna_alvo)
+            print("Escolha a técnica para a análise:")
+            print("1. Random Forest Classifier")
+            print("2. Apriori")
+            escolha = input("Digite o número da técnica desejada: ")
+
+            if escolha == '1':
+                treinar_modelo(dados_transformados, coluna_alvo)
+            elif escolha == '2':
+                aplicar_apriori(dados_transformados)
+            else:
+                print("Escolha inválida!")
         else:
             print(f"Coluna alvo '{coluna_alvo}' não encontrada nos dados!")
     except Exception as e:
