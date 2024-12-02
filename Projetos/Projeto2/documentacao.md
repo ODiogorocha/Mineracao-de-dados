@@ -1,139 +1,103 @@
-# Documentação do Código de Análise e Mineração de Dados
+# Documentação do Código
 
-Este documento detalha cada parte do código, explicando suas funções e as bibliotecas utilizadas. O objetivo do código é realizar análise, limpeza, transformação e aplicação de aprendizado de máquina em um dataset relacionado à UFSM.
-
----
+Este código implementa um processo de análise de dados usando duas abordagens: **Árvore de Decisão** e **Apriori**. O código inclui funções para carregar e processar dados, aplicar modelos de aprendizado de máquina e gerar gráficos para análise visual.
 
 ## Bibliotecas Utilizadas
 
-### 1. **Pandas**
-- **Descrição:** Utilizada para manipulação e análise de dados estruturados.
-- **Funções Usadas:** 
-  - `read_excel`: Para carregar arquivos Excel (`.xls` ou `.xlsx`).
-  - `read_csv`: Para carregar arquivos CSV.
-  - `describe`: Para obter estatísticas descritivas.
-  - `info`: Para exibir informações sobre o DataFrame.
-  - `drop_duplicates`: Para remover linhas duplicadas.
-  - `fillna`: Para preencher valores ausentes.
+- **pandas**: Manipulação e análise de dados.
+- **matplotlib.pyplot**: Geração de gráficos.
+- **seaborn**: Visualização estatística.
+- **mlxtend.frequent_patterns**: Implementação do algoritmo Apriori para análise de associações.
+- **sklearn**: Biblioteca para aprendizado de máquina, incluindo escalonamento de dados, modelagem e avaliação.
 
-### 2. **Matplotlib**
-- **Descrição:** Biblioteca para criação de visualizações gráficas.
-- **Funções Usadas:**
-  - `plt.figure`: Para ajustar o tamanho da figura.
-  - `plt.title`: Para adicionar títulos aos gráficos.
-  - `plt.show`: Para exibir os gráficos.
-
-### 3. **Seaborn**
-- **Descrição:** Biblioteca para visualização de dados, construída sobre o Matplotlib.
-- **Funções Usadas:**
-  - `sns.heatmap`: Para visualizar valores ausentes ou matrizes de confusão.
-
-### 4. **Scikit-learn**
-- **Descrição:** Biblioteca para aprendizado de máquina e mineração de dados.
-- **Funções Usadas:**
-  - `StandardScaler`: Para normalização dos dados.
-  - `PCA`: Para redução de dimensionalidade.
-  - `train_test_split`: Para dividir os dados em conjuntos de treino e teste.
-  - `RandomForestClassifier`: Para treinar um modelo de classificação.
-  - `classification_report`: Para gerar métricas de desempenho do modelo.
-  - `confusion_matrix`: Para gerar uma matriz de confusão.
-
----
-
-## Funções do Código
+## Funções
 
 ### 1. `carregar_dados(caminho_arquivo: str) -> pd.DataFrame`
-- **Objetivo:** Carregar dados de um arquivo Excel ou CSV.
-- **Parâmetros:**
-  - `caminho_arquivo`: Caminho para o arquivo a ser carregado.
-- **Retorno:** Um `DataFrame` com os dados carregados.
-- **Detalhes:**
-  - Verifica a extensão do arquivo.
-  - Usa `pd.read_excel` para arquivos Excel e `pd.read_csv` para arquivos CSV.
-  - Gera um erro se o formato do arquivo não for suportado.
+Carrega os dados de um arquivo Excel ou CSV.
 
----
+- **Entrada**: Caminho do arquivo.
+- **Saída**: DataFrame contendo os dados carregados.
 
-### 2. `explorar_dados(dados: pd.DataFrame) -> None`
-- **Objetivo:** Explorar os dados carregados, exibindo estatísticas básicas e visualizações.
-- **Parâmetros:**
-  - `dados`: O DataFrame contendo os dados.
-- **Processo:**
-  - Exibe estatísticas descritivas com `describe`.
-  - Exibe informações sobre os dados (tipos de coluna, valores nulos) com `info`.
-  - Gera:
-    - Um gráfico de calor para mostrar valores ausentes.
-    - Histogramas para mostrar a distribuição das variáveis.
+### 2. `verificar_e_transformar_dados(dados: pd.DataFrame) -> pd.DataFrame`
+Transforma os dados em um formato adequado para análise com Apriori.
 
----
+- **Entrada**: DataFrame com dados.
+- **Saída**: DataFrame transformado em formato de "cesta de compras", pronto para o algoritmo Apriori.
 
-### 3. `limpar_dados(dados: pd.DataFrame) -> pd.DataFrame`
-- **Objetivo:** Realizar limpeza básica dos dados.
-- **Parâmetros:**
-  - `dados`: O DataFrame a ser limpo.
-- **Processo:**
-  - Remove linhas duplicadas com `drop_duplicates`.
-  - Preenche valores ausentes com a mediana das colunas numéricas usando `fillna`.
+### 3. `aplicar_apriori(cesta: pd.DataFrame, suporte_minimo: float = 0.01) -> pd.DataFrame`
+Aplica o algoritmo Apriori para encontrar conjuntos frequentes no conjunto de dados.
 
----
+- **Entrada**: DataFrame de cestas e o suporte mínimo para os conjuntos frequentes.
+- **Saída**: DataFrame com os conjuntos frequentes encontrados.
 
-### 4. `transformar_dados(dados: pd.DataFrame, colunas_alvo: list) -> pd.DataFrame`
-- **Objetivo:** Normalizar as colunas especificadas.
-- **Parâmetros:**
-  - `dados`: O DataFrame contendo os dados.
-  - `colunas_alvo`: Lista de colunas que devem ser normalizadas.
-- **Processo:**
-  - Normaliza as colunas especificadas usando `StandardScaler`.
+### 4. `gerar_regras(conjuntos_frequentes: pd.DataFrame, num_itemsets: int, metric: str = 'confidence', min_threshold: float = 0.5) -> pd.DataFrame`
+Gera regras de associação a partir dos conjuntos frequentes.
 
----
+- **Entrada**: DataFrame com conjuntos frequentes, número de itemsets, métrica de avaliação (confidence, lift, etc.), e o limiar mínimo.
+- **Saída**: DataFrame com as regras geradas.
 
-### 5. `reduzir_dimensao(dados: pd.DataFrame, n_componentes: int) -> pd.DataFrame`
-- **Objetivo:** Reduzir a dimensionalidade dos dados.
-- **Parâmetros:**
-  - `dados`: O DataFrame contendo os dados.
-  - `n_componentes`: Número de componentes principais a serem mantidos.
-- **Processo:**
-  - Aplica PCA para reduzir a dimensionalidade.
-  - Exibe a variância explicada por cada componente.
+### 5. `gerar_grafico_comparacao_sexo(dados: pd.DataFrame)`
+Gera um gráfico de barras para comparar a quantidade de formandos por sexo.
 
----
+- **Entrada**: DataFrame com a coluna `SEXO` e `FORMADOS`.
+- **Saída**: Gráfico de barras com a comparação de formandos por sexo.
 
-### 6. `treinar_modelo(dados: pd.DataFrame, alvo: str) -> None`
-- **Objetivo:** Treinar um modelo de classificação e avaliar o desempenho.
-- **Parâmetros:**
-  - `dados`: O DataFrame contendo os dados.
-  - `alvo`: Nome da coluna alvo (variável dependente).
-- **Processo:**
-  - Divide os dados em treino e teste com `train_test_split`.
-  - Treina um modelo de floresta aleatória com `RandomForestClassifier`.
-  - Avalia o modelo usando:
-    - Relatório de classificação (`classification_report`).
-    - Matriz de confusão (`confusion_matrix`).
+### 6. `explorar_dados(dados: pd.DataFrame) -> None`
+Realiza uma exploração preliminar dos dados, mostrando estatísticas descritivas e informações gerais.
 
----
+- **Entrada**: DataFrame com dados.
+- **Saída**: Visualizações gráficas e informações sobre os dados.
 
-### Bloco `if __name__ == "__main__":`
-- **Objetivo:** Executar o fluxo completo de análise.
-- **Etapas:**
-  1. Carregar os dados do arquivo especificado.
-  2. Explorar os dados para entender suas características.
-  3. Limpar os dados para remover duplicatas e preencher valores ausentes.
-  4. Transformar os dados para normalizar colunas relevantes.
-  5. Reduzir a dimensionalidade usando PCA.
-  6. Treinar e avaliar um modelo de classificação com a coluna alvo `#FORMADOS`.
+### 7. `limpar_dados(dados: pd.DataFrame) -> pd.DataFrame`
+Remove duplicatas e preenche valores ausentes nos dados.
 
----
+- **Entrada**: DataFrame com dados.
+- **Saída**: DataFrame com dados limpos.
 
-## Ajustes Possíveis
-- **Coluna Alvo:** Certifique-se de que o nome da coluna alvo (`#FORMADOS`) corresponde ao presente no dataset.
-- **Caminho do Arquivo:** Verifique se o caminho especificado está correto.
+### 8. `transformar_dados(dados: pd.DataFrame) -> pd.DataFrame`
+Transforma os dados para que possam ser usados em modelos de aprendizado de máquina, normalizando variáveis numéricas e codificando variáveis categóricas.
 
----
+- **Entrada**: DataFrame com dados.
+- **Saída**: DataFrame com dados transformados.
 
-## Exemplo de Uso
+### 9. `reduzir_dimensao(dados: pd.DataFrame, n_componentes: int) -> pd.DataFrame`
+Reduz a dimensionalidade dos dados utilizando PCA (Análise de Componentes Principais).
 
-1. Coloque o dataset no caminho especificado no código.
-2. Execute o script.
-3. Os gráficos e relatórios gerados serão exibidos diretamente no console e nas janelas gráficas.
+- **Entrada**: DataFrame com dados e o número de componentes principais.
+- **Saída**: DataFrame com dados de dimensionalidade reduzida.
 
----
+### 10. `treinar_modelo(dados: pd.DataFrame, alvo: str) -> None`
+Treina um modelo de aprendizado de máquina (Random Forest) para prever o valor da coluna alvo e gera gráficos de avaliação.
+
+- **Entrada**: DataFrame com dados transformados e o nome da coluna alvo.
+- **Saída**: Relatório de classificação, matriz de confusão e gráficos de avaliação.
+
+## Função Principal
+
+A função principal (`main()`) permite ao usuário escolher entre duas abordagens:
+
+1. **Árvore de Decisão**: Utiliza Random Forest para prever o valor de uma coluna alvo.
+2. **Apriori**: Aplica o algoritmo Apriori para encontrar regras de associação entre itens em um conjunto de dados.
+
+### Fluxo de Execução
+
+1. O usuário escolhe o método desejado (Árvore de Decisão ou Apriori).
+2. Os dados são carregados do arquivo.
+3. Dependendo da escolha, o código executa a análise de associação ou o treinamento de um modelo de árvore de decisão.
+4. São gerados gráficos para ajudar na visualização dos resultados, como gráficos de barras e pizza.
+
+## Requisitos
+
+Para rodar o código, você precisa das seguintes bibliotecas:
+
+- `pandas`
+- `matplotlib`
+- `seaborn`
+- `mlxtend`
+- `sklearn`
+
+Estas bibliotecas podem ser instaladas utilizando o comando `pip install pandas matplotlib seaborn mlxtend scikit-learn`.
+
+## Conclusão
+
+Este código oferece uma implementação abrangente para análise de dados utilizando tanto técnicas de aprendizado de máquina quanto de mineração de padrões. Ele gera insights visuais sobre os dados e pode ser facilmente adaptado para diferentes conjuntos de dados e problemas analíticos.

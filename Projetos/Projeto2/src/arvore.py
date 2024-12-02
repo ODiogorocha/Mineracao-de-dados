@@ -127,23 +127,6 @@ def treinar_modelo(dados: pd.DataFrame, alvo: str) -> None:
     plt.ylabel("Real")
     plt.show()
 
-    # Gráfico de comparação por sexo
-    dados_teste = X_teste.copy()
-    dados_teste['SEXO'] = y_teste
-    dados_teste['Predicao'] = previsoes
-    comparacao_sexo = dados_teste.groupby('SEXO').agg({'Predicao': 'value_counts'}).unstack(fill_value=0)
-    comparacao_sexo.plot(kind='bar', stacked=True, figsize=(12, 6), title='Comparação de Predições por Sexo')
-    plt.xlabel('Sexo')
-    plt.ylabel('Número de Predições')
-    plt.show()
-
-    # Gráfico de pizza para a distribuição de previsões por sexo
-    distribuicao_sexo = dados_teste['SEXO'].value_counts()
-    plt.figure(figsize=(8, 6))
-    plt.pie(distribuicao_sexo, labels=distribuicao_sexo.index, autopct='%1.1f%%', startangle=140, colors=['lightblue', 'lightcoral'])
-    plt.title("Distribuição de Previsões por Sexo")
-    plt.show()
-
 # Função principal
 def main():
     caminho_dados = "arq/Ingressantes e Formandos/CT Ingressantes e formados por sexo.xls"
