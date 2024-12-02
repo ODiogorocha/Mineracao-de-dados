@@ -59,13 +59,17 @@ def gerar_regras(conjuntos_frequentes: pd.DataFrame, num_itemsets: int, metric: 
 def gerar_grafico_comparacao_sexo(dados: pd.DataFrame):
     try:
         comparacao_sexo = dados.groupby('SEXO')['FORMADOS'].sum()
-        comparacao_sexo.plot(kind='bar', title='Comparação de Formandos por Sexo')
+
+        cores = {'M': 'blue', 'F': 'pink'}  
+        comparacao_sexo.plot(kind='bar', title='Comparação de Formandos por Sexo', color=[cores[x] for x in comparacao_sexo.index])
+
         plt.xlabel('Sexo')
         plt.ylabel('Número de Formandos')
         plt.show()
     except Exception as e:
         print(f"Erro ao gerar o gráfico de comparação: {e}")
         raise
+
 
 # Funções de processamento e análise para a árvore de decisão
 def explorar_dados(dados: pd.DataFrame) -> None:
