@@ -150,7 +150,7 @@ def treinar_modelo(dados: pd.DataFrame, alvo: str) -> None:
 
 # Função principal
 def main():
-    caminho_dados = "arq/Ingressantes e Formandos/CT Ingressantes e formados por sexo.xls"
+    caminho_dados = "Projetos/Projeto2/arq/Ingressantes e Formandos/CT Ingressantes e formados por sexo.xls"
 
     print("Escolha o método desejado:")
     print(" (1) Árvore de Decisão")
